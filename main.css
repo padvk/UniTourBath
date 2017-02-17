@@ -1,0 +1,134 @@
+/* all pages */
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+}
+
+header {
+	padding: 20px 0;
+}
+
+header .row, footer .row {
+	display: flex;
+	align-items: center;
+}
+
+header h1 {
+	font-weight: 700;
+	color: #000;
+	margin: 0;
+	display: inline;
+}
+
+header h1 a {
+	color: #000;
+}
+
+header nav {
+	display: flex;
+	justify-content: flex-end;
+}
+
+header nav li {
+  display: inline;
+  margin: 0;
+  padding: 0 10px;
+}
+
+header nav ul {
+  display: inline;
+}
+
+header nav a {
+	text-decoration: none;
+	font-size: 15px;
+}
+
+header p {
+	padding: 0 20px;
+	margin: 0;
+	cursor: pointer;
+}
+
+footer {
+	font-size: 12px;
+	padding: 20px 0;
+}
+
+footer .col-sm-8 {
+	display: flex;
+	justify-content: flex-end;
+}
+
+footer ul {
+	list-style: none;
+}
+
+footer li img {
+	cursor: pointer;
+	width: 4rem;
+	height: 4rem;
+}
+
+/* homepage */
+
+.jumbotron {
+	display: flex;
+	align-items: center;
+	background-image:url("home/bathunipic.jpg");
+	background-size: cover;
+	height: 200px;
+	background-repeat: no-repeat;
+	color: #ffffff;
+}
+
+.jumbotron h2 {
+	font-size: 60px;
+	font-weight: 700;
+	margin: 0;
+	color: #fff;
+}
+
+.jumbotron h3 {
+	margin: 0 0 20px;
+	color: #fff;
+}
+
+section .row img {
+	margin: 0 0 30px;
+	width: 100%;
+}
+
+.col-md-6 {
+	margin: 0 0 30px;
+}
+
+.quote {
+	position: relative;
+	cursor: pointer;
+	border: 1px solid #DBDEE2;
+	margin: 20px;
+	text-align: center;
+	font-size: 25px;
+	padding: 10px;
+}
+
+.quote:hover {
+	top:2px;
+	left:2px;
+	box-shadow: 8px 8px 15px -5px rgba(0,0,0,0.5);
+}
+
+.btn.btn-primary {
+	border-radius: 2px;
+	border: 0px;
+	color: #598CD7;
+	text-shadow: none;
+	background-color: #ffffff;
+}
+
+.btn.btn-primary:hover {
+	color: #ffffff;
+	background-color: #598CD7;
+}
