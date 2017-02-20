@@ -28,14 +28,14 @@
       };
 		//Initialises map. Centred about bath uni.
         function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(51.379193, -2.327405),
-          zoom: 16
-        });
-        var infoWindow = new google.maps.InfoWindow;
+			var map = new google.maps.Map(document.getElementById('map'), {
+			  center: new google.maps.LatLng(51.379193, -2.327405),
+			  zoom: 16
+			});
+			var infoWindow = new google.maps.InfoWindow;
 			
 			//URL for XML file
-          downloadUrl('http://people.bath.ac.uk/sdh42/pointsOfInterest.xml', function(data) {
+            downloadUrl('createXML.php', function(data) { // Sam, change back to pointsOfInterest.xml if you're adding more attributes
             var xml = data.responseXML;
             var markers = xml.documentElement.getElementsByTagName('marker');
             Array.prototype.forEach.call(markers, function(markerElem) {
