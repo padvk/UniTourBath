@@ -43,7 +43,7 @@
 			console.log("Download URL function");
 			//URL for XML file
 			//Takes information from XML file and adds markers to map
-			downloadUrl('createXML.php', function(data) {
+			downloadUrl('pointsOfInterest.xml', function(data) {
 				var xml = data.responseXML;
 				var pointsOfInterest = xml.documentElement.getElementsByTagName('marker');
 				Array.prototype.forEach.call(pointsOfInterest, function(markerElem) {
@@ -116,18 +116,17 @@
 			poly.setMap(map);
 			
 			//Draw route
-			for (var i = 0; i < latiLong.length; i++) {
-				if ((i + 1) < latiLong.length) {
+			for (var i = 0; i <= latiLong.length; i++) {
+				if ((i+1) < latiLong.length) {
 					var src = latiLong[i];
-					var des = latiLong[i + 1];
-					path.push(src);
+					var des = latiLong[i+1];
 					poly.setPath(path);
 					service.route({
 						origin: src,
 						destination: des,
 						travelMode: google.maps.DirectionsTravelMode.WALKING
 					}, function (result, status) {
-						if (status == google.maps.DirectionsStatus.OK) {
+						if (status == 'OK') {
 							for (var i = 0, len = result.routes[0].overview_path.length; i < len; i++) {
 								path.push(result.routes[0].overview_path[i]);
 							}
@@ -137,8 +136,7 @@
 			}
 		}
 		  
-
-		  function doNothing() {}
+		function doNothing() {}
 	  
     </script>
     <script async defer
