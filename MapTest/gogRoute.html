@@ -35,7 +35,7 @@
 			
 			map = new google.maps.Map(document.getElementById('map'), {
 				center: new google.maps.LatLng(51.379193, -2.327405),
-				zoom: 16
+				zoom: 17
 			});
 			var infoWindow = new google.maps.InfoWindow;
 			var latiLong = new Array();
@@ -58,6 +58,7 @@
 					//pushing the point (lat and long data) to latiLong - used for the route finding
 					latiLong.push(point);
 					
+					//Info window userd when user clicks on point of interest
 					var infowincontent = document.createElement('div');
 					var strong = document.createElement('strong');
 					strong.textContent = name
@@ -69,9 +70,9 @@
 					infowincontent.appendChild(text);
 					var icon = customLabel[type] || {};
 					var marker = new google.maps.Marker({
-					map: map,
-					position: point,
-					label: icon.label
+						map: map,
+						position: point,
+						label: icon.label
 					});
 					marker.addListener('click', function() {
 					infoWindow.setContent(infowincontent);
@@ -80,6 +81,8 @@
 					});
 				});
 				calculateRoute(latiLong);
+				getPosition();
+				
 			});
 		}
 
@@ -137,6 +140,38 @@
 		}
 		  
 		function doNothing() {}
+		
+		//Function that gets and then tracks the position of the user
+		function getPosition () {
+
+			if (navigator.geolocation) {
+			  navigator.geolocation.watchPosition(function(position) {
+				var pos = {
+				  lat: position.coords.latitude,
+				  lng: position.coords.longitude
+				};
+				marker = new google.maps.Marker({
+					position: pos,
+					map: map,
+					title: "User Position"
+				});
+				map.setCenter(pos);
+				
+			  }, function() {
+				handleLocationError(true, infoWindow, map.getCenter());
+			  });
+			} else {
+			  // Browser doesn't support Geolocation
+			  handleLocationError(false, infoWindow, map.getCenter());
+			}
+		}
+		
+		function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+			infoWindow.setPosition(pos);
+			infoWindow.setContent(browserHasGeolocation ?
+								  'Error: Location service failed.' :
+								  'Error: Your browser does not support location.');
+		}
 	  
     </script>
     <script async defer
