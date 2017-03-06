@@ -1,15 +1,15 @@
 <!DOCTYPE html >
   <head>
     <title>UniTour Bath</title>
+	<meta name = "UTB", content = "initial-scale = 1.0, user-scalable = no"/>
     <style>
       /* Height of map must be set explicitly */
       #map {
         height: 100%;
+		width: 100%;
       }
       html, body {
         height: 100%;
-        margin: 0;
-        padding: 0;
       }
     </style>
   </head>
@@ -32,7 +32,6 @@
 		
 		//Initialises map. Centred about bath uni.
 		function initMap() {
-			
 			map = new google.maps.Map(document.getElementById('map'), {
 				center: new google.maps.LatLng(51.379193, -2.327405),
 				zoom: 17
@@ -150,6 +149,8 @@
 				  lat: position.coords.latitude,
 				  lng: position.coords.longitude
 				};
+				//Used to remove old markers
+				if (typeof(marker) != "undefined") marker.setMap(null);
 				marker = new google.maps.Marker({
 					position: pos,
 					map: map,
