@@ -18,7 +18,6 @@
     <div id="map"></div>
 
     <script>
-		console.log("First call");
 		var customLabel = {
 			poi: {
 				label: 'P'
@@ -29,6 +28,8 @@
 		};
 	  
 		var map;
+		var yourLat;
+		var yourLng;
 		
 		//Initialises map. Centred about bath uni.
 		function initMap() {
@@ -37,12 +38,11 @@
 				zoom: 17
 			});
 			var infoWindow = new google.maps.InfoWindow;
-			var latiLong = new Array();
+			var latiLong = [];
 				
-			console.log("Download URL function");
 			//URL for XML file
 			//Takes information from XML file and adds markers to map
-			downloadUrl('pointsOfInterest.xml', function(data) {
+			downloadUrl('createXML.php', function(data) {
 				var xml = data.responseXML;
 				var pointsOfInterest = xml.documentElement.getElementsByTagName('marker');
 				Array.prototype.forEach.call(pointsOfInterest, function(markerElem) {
@@ -80,8 +80,7 @@
 					});
 				});
 				calculateRoute(latiLong);
-				getPosition();
-				
+				getPosition(latiLong);
 			});
 		}
 
@@ -138,32 +137,37 @@
 			}
 		}
 		  
-		function doNothing() {}
-		
 		//Function that gets and then tracks the position of the user
-		function getPosition () {
-
+		function getPosition(latiLong) {
+			var pos;
 			if (navigator.geolocation) {
-			  navigator.geolocation.watchPosition(function(position) {
-				var pos = {
-				  lat: position.coords.latitude,
-				  lng: position.coords.longitude
-				};
-				//Used to remove old markers
-				if (typeof(marker) != "undefined") marker.setMap(null);
-				marker = new google.maps.Marker({
-					position: pos,
-					map: map,
-					title: "User Position"
+				navigator.geolocation.watchPosition(function(position) {
+					pos = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					};
+					
+					//Used to remove old markers
+					if (typeof(marker) != "undefined") marker.setMap(null);
+					marker = new google.maps.Marker({
+						position: pos,
+						map: map,
+						title: "User Position"
+					});
+					map.setCenter(pos);
+					
+					// currently findClosestPoint is called in the watchPosition function
+					// so it's called everytime your location updates
+					// might be what we want?
+					findClosestPoint(latiLong, pos.lat, pos.lng);
+					
+				}, function() {
+					handleLocationError(true, infoWindow, map.getCenter());
 				});
-				map.setCenter(pos);
 				
-			  }, function() {
-				handleLocationError(true, infoWindow, map.getCenter());
-			  });
 			} else {
-			  // Browser doesn't support Geolocation
-			  handleLocationError(false, infoWindow, map.getCenter());
+				// Browser doesn't support Geolocation
+				handleLocationError(false, infoWindow, map.getCenter());
 			}
 		}
 		
@@ -173,6 +177,41 @@
 								  'Error: Location service failed.' :
 								  'Error: Your browser does not support location.');
 		}
+		
+		function findClosestPoint(latiLong, lat, lng) {
+			var closest = 0;
+			var lowestDistance = 999;
+			
+			for (i = 0; i < latiLong.length; i++) { // for each POI
+				// get distance from current location to point i
+				var destLat = latiLong[i].lat();
+				var destLng = latiLong[i].lng();
+				var distance = Math.sqrt(Math.pow(lng - destLng, 2) + Math.pow(lat - destLat, 2));
+				
+				if (distance < lowestDistance) {
+					closest = i;
+					lowestDistance = distance;
+				}
+			}
+			console.log(closest);
+		}
+		
+		// http://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
+		// clone an object
+		function clone(obj) {
+			if (null == obj || "object" != typeof obj) {
+				console.log("not object");
+				return obj;
+			}
+			
+			var copy = obj.constructor();
+			for (var attr in obj) {
+				if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+			}
+			return copy;
+		}
+		
+		function doNothing() {}
 	  
     </script>
     <script async defer
