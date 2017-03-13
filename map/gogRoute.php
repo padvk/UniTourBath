@@ -17,11 +17,19 @@
   <body>
     <div id="map"></div>
 	
+	<?php
+		// get the time and dep from URL arguments
+		// URL will look like https://people.bath.ac.uk/ph471/UTB/map/gogRoute.php?t=30&dep=CS
+		$time = $_GET['t'];
+		$dep = $_GET['dep'];
+	?>
     <script>
 		// XML sent to this page will contain the points that should be on this tour
 		// Javascript then finds which point is closest to the user's current location
 		// begins tour on closest point, then after that, moves to next point
 		// all the needed data is loaded from the XML, no need for other interaction with database and php stuff
+		var time = <?php echo $time ?>;
+		var dep = "<?php echo $dep ?>";
 		
 		var customLabel = {
 			poi: {
@@ -47,7 +55,7 @@
 				
 			//URL for XML file
 			//Takes information from XML file and adds markers to map
-			downloadUrl('createXML.php', function(data) {
+			downloadUrl('createXML.php?t=' + time + '&dep=' + dep, function(data) {
 				var xml = data.responseXML;
 				var pointsOfInterest = xml.documentElement.getElementsByTagName('marker');
 				Array.prototype.forEach.call(pointsOfInterest, function(markerElem) {

@@ -1,4 +1,7 @@
 <?php
+	$time = $_GET['t'];
+	$dep = $_GET['dep'];
+		
 	// code from https://developers.google.com/maps/documentation/javascript/mysql-to-maps
 	
 	include "../globals.php";
@@ -16,8 +19,10 @@
 		die('Not connected : ' . mysql_error());
 	}
 
+	$priority = $time / 30; // priority depends on time selection
+	
 	// Select all the rows in the markers table
-	$query = "SELECT * FROM utbpoi ORDER BY orderID";
+	$query = "SELECT * FROM utbpoi WHERE priority=$priority ORDER BY orderID"; // will also search for department=$dep. Dep should be ID, not name.
 	$result = mysql_query($query);
 	if (!$result) {
 		die('Invalid query: ' . mysql_error());
