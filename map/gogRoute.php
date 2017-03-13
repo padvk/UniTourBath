@@ -92,7 +92,6 @@
 					
 					});
 				});
-				calculateRoute(latiLong);
 				getPosition(latiLong);
 			});
 		}
@@ -112,42 +111,6 @@
 
 			request.open('GET', url, true);
 			request.send(null);
-		}
-		  
-		  
-		//calculate route uses the array latiLong that stores the lat and long of the points. 
-		//It loops through each point and draws routes for each one
-		function calculateRoute(latiLong) {
-			
-			//Create Path array
-			var path = new google.maps.MVCArray();
-			
-			//Initialise Google's direction service
-			var service = new google.maps.DirectionsService();
-			
-			//Set path colour
-			var poly = new google.maps.Polyline({ strokeColor: '#CC00FF' });
-			poly.setMap(map);
-			
-			//Draw route
-			for (var i = 0; i <= latiLong.length; i++) {
-				if ((i+1) < latiLong.length) {
-					var src = latiLong[i];
-					var des = latiLong[i+1];
-					poly.setPath(path);
-					service.route({
-						origin: src,
-						destination: des,
-						travelMode: google.maps.DirectionsTravelMode.WALKING
-					}, function (result, status) {
-						if (status == 'OK') {
-							for (var i = 0, len = result.routes[0].overview_path.length; i < len; i++) {
-								path.push(result.routes[0].overview_path[i]);
-							}
-						}
-					});
-				}
-			}
 		}
 		  
 		//Function that gets and then tracks the position of the user
