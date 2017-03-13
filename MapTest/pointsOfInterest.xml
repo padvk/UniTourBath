@@ -1,9 +1,0 @@
-<?xml version="1.0"?>                            
-
-<markers>
-
-	<marker name="Library" address="Bath Library" lat="51.379974" lng="-2.327900" type="poi"/>
-	<marker name="STV" address="Sports Training Village" lat="51.377637" lng="-2.324311" type="visited"/>
-	
-</markers>
-
