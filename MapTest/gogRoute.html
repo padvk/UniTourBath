@@ -16,8 +16,13 @@
 
   <body>
     <div id="map"></div>
-
+	
     <script>
+		// XML sent to this page will contain the points that should be on this tour
+		// Javascript then finds which point is closest to the user's current location
+		// begins tour on closest point, then after that, moves to next point
+		// all the needed data is loaded from the XML, no need for other interaction with database and php stuff
+		
 		var customLabel = {
 			poi: {
 				label: 'P'
@@ -28,8 +33,8 @@
 		};
 	  
 		var map;
-		var yourLat;
-		var yourLng;
+		var currentPOI = 0;
+		var initialised = false;
 		
 		//Initialises map. Centred about bath uni.
 		function initMap() {
@@ -47,7 +52,7 @@
 				var pointsOfInterest = xml.documentElement.getElementsByTagName('marker');
 				Array.prototype.forEach.call(pointsOfInterest, function(markerElem) {
 					var name = markerElem.getAttribute('name');
-					var address = markerElem.getAttribute('address');
+					var address = markerElem.getAttribute('orderID') + " | " + markerElem.getAttribute('address');
 					var type = markerElem.getAttribute('type');
 					var point = new google.maps.LatLng(
 						parseFloat(markerElem.getAttribute('lat')),
@@ -60,7 +65,7 @@
 					//Info window userd when user clicks on point of interest
 					var infowincontent = document.createElement('div');
 					var strong = document.createElement('strong');
-					strong.textContent = name
+					strong.textContent = name;
 					infowincontent.appendChild(strong);
 					infowincontent.appendChild(document.createElement('br'));
 
@@ -193,7 +198,19 @@
 					lowestDistance = distance;
 				}
 			}
-			console.log(closest);
+			console.log("Your location just updated. Closest arrayIndex: " + closest);
+			
+			if (!initialised) { // get the initial closest point of interest
+				currentPOI = closest;
+				initialised = true;
+				console.log("Initial closest: " + closest);
+			}
+			
+			if (closest != currentPOI) { // user now closer to the next POI
+				// Ask user if they want to view info on the next POI
+				console.log("Closer to POI with arrayIndex " + closest + " than POI arrayIndex " + currentPOI);
+				currentPOI = closest;
+			}
 		}
 		
 		// http://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
