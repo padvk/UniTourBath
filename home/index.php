@@ -26,11 +26,11 @@
 			
             // define variables and set to empty values
             $departmentErr = $tourlengthErr = $disabilityErr = $voiceoverErr = "";
-            $department = $tourlength = $disability = $voiceover = "";
+            $department = $tourlength = $disability = $voiceover = "x";
             
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (empty($_POST["tourlength"])) {
-                    $tourlengthErr = "Tour length is required";
+                    $tourlength = "30";
                 }
                 
                 if (empty($_POST["department"])) {
@@ -47,6 +47,8 @@
                     }
                 }
                 
+                $go = "../map/gogRoute.php?t=".($_POST["tourlength"])."&dep=".($_POST["department"]);
+                header("Location: $go");
             }
         
         function test_input($data) {
@@ -78,11 +80,11 @@
                     Welcome to UniTour Bath. This website is a virtual tour assistant, and will guide you on a personalised tour around the UoB campus. 
                     To begin, please insert your tour preferences, and press <b>Begin Tour</b>
                 </h3>
-                <form action="../map/" class="form-horizontal" method="post" >  
+                <form class="form-horizontal" method="post" >
                     <div class="form-group">
                         <label class="col-xs-6 control-label" for="department">Department</label>
                         <div class="col-xs-6">
-                            <select list="departments" type="list" name="department"  class="form-control" placeholder="Enter department" value="<?php echo $department;?>">
+                            <select list="departments" type="list" name="department" class="form-control" placeholder="Enter department" value="">
                             <datalist id="departments">
                                 <?php
                                     $query = <<<ENDOFSTRING
@@ -99,8 +101,8 @@ ENDOFSTRING;
                     <div class="form-group">
                         <label class="col-xs-6 control-label" for="tourlength">Tour Length (minutes)</label>
                         <div class="col-xs-6">
-                            <select list="lengths" type="list" name="tourlength"  class="form-control" placeholder="Enter Tour Length" value="<?php echo $department;?>">
-                            <datalist id="departments">
+                            <select list="lengths" type="list" name="tourlength"  class="form-control" placeholder="Enter Tour Length" value="">
+                            <datalist id="lengths">
                                 <?php
                                     $query = <<<ENDOFSTRING
                                     SELECT * FROM utbtourlength; 
@@ -127,7 +129,7 @@ ENDOFSTRING;
                     </div>
                     
                     <div class="row text-center">
-                        <input class="btn btn-primary" id="continueButton" type="submit" value="Begin Tour"/>
+                        <input class="btn btn-primary" id="continueButton" type="submit" value="Begin Tour" />
                         <br>
                     </div> 
                 </form>
@@ -135,8 +137,15 @@ ENDOFSTRING;
             </div>
         </div>
     </section>
+    <a href="<?php echo "../map/gogRoute.php?t=";
+    echo $_POST["tourlength"];
+    echo "&dep=";
+    echo $_POST["department"];?>"><?php echo "../map/gogRoute.php?t=";
+    echo $_POST["tourlength"];
+    echo "&dep=";
+    echo $_POST["department"];?></a>
+    <?php    
     
-    <?php
     $result->free();
     $db->disconnect();
     ?>
