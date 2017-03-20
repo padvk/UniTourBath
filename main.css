@@ -132,3 +132,14 @@ section .row img {
 	color: #ffffff;
 	background-color: #598CD7;
 }
+
+/* Map */ 
+
+/* Height of map must be set explicitly */
+#map {
+    height: 100%;
+	width: 100%;
+}
+html, body {
+    height: 100%;
+}
