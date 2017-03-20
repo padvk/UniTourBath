@@ -22,7 +22,13 @@
 	$priority = $time / 30; // priority depends on time selection
 	
 	// Select all the rows in the markers table
-	$query = "SELECT * FROM utbpoi WHERE priority<=$priority ORDER BY orderID"; // will also search for department=$dep. Dep should be ID, not name.
+    $query = "";
+    if ($dep == "None") {
+        $query = "SELECT * FROM utbpoi WHERE priority<=$priority ORDER BY orderID";
+    } else {
+        $query = "SELECT * FROM utbpoi WHERE priority<=$priority OR department='$dep' ORDER BY orderID";
+    }
+	
 	$result = mysql_query($query);
 	if (!$result) {
 		die('Invalid query: ' . mysql_error());

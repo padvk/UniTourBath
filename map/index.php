@@ -68,15 +68,17 @@
 			});
 			var infoWindow = new google.maps.InfoWindow;
 			var latiLong = [];
+            var pointInfo = [];
 				
 			//URL for XML file
 			//Takes information from XML file and adds markers to map
 			downloadUrl('createXML.php?t=' + time + '&dep=' + dep, function(data) {
 				var xml = data.responseXML;
 				var pointsOfInterest = xml.documentElement.getElementsByTagName('marker');
+                var order = 1;
 				Array.prototype.forEach.call(pointsOfInterest, function(markerElem) {
 					var name = markerElem.getAttribute('name');
-					var address = markerElem.getAttribute('orderID') + " | " + markerElem.getAttribute('address');
+					var address = order++ + " | " + markerElem.getAttribute('address');
 					var type = markerElem.getAttribute('type');
 					var point = new google.maps.LatLng(
 						parseFloat(markerElem.getAttribute('lat')),
@@ -107,8 +109,9 @@
 					infoWindow.open(map, marker);
 					
 					});
+                    pointInfo.push(name);
 				});
-				getPosition(latiLong);
+				getPosition(latiLong, pointInfo);
 			});
 		}
 
@@ -130,7 +133,7 @@
 		}
 		  
 		//Function that gets and then tracks the position of the user
-		function getPosition(latiLong) {
+		function getPosition(latiLong, pointInfo) {
 			var pos;
 			if (navigator.geolocation) {
 				navigator.geolocation.watchPosition(function(position) {
@@ -151,7 +154,7 @@
 					// currently findClosestPoint is called in the watchPosition function
 					// so it's called everytime your location updates
 					// might be what we want?
-					findClosestPoint(latiLong, pos.lat, pos.lng);
+					findClosestPoint(latiLong, pointInfo, pos.lat, pos.lng);
 					
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
@@ -170,7 +173,7 @@
 								  'Error: Your browser does not support location.');
 		}
 		
-		function findClosestPoint(latiLong, lat, lng) {
+		function findClosestPoint(latiLong, pointInfo, lat, lng) { // called when position is updated
 			var closest = 0;
 			var lowestDistance = 999;
 			
@@ -185,18 +188,27 @@
 					lowestDistance = distance;
 				}
 			}
-			console.log("Your location just updated. Closest arrayIndex: " + closest);
+            var closestName = pointInfo[closest];
+            
+			console.log("Your location just updated. Closest: " + closestName);
 			
 			if (!initialised) { // get the initial closest point of interest
 				currentPOI = closest;
 				initialised = true;
-				console.log("Initial closest: " + closest);
+                document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
+				console.log("Initial closest: " + closestName);
 			}
 			
-			if (closest != currentPOI) { // user now closer to the next POI
-				// Ask user if they want to view info on the next POI
-				console.log("Closer to POI with arrayIndex " + closest + " than POI arrayIndex " + currentPOI);
-				currentPOI = closest;
+			if (closest != currentPOI+1 && lowestDistance < 0.00025) { // user now closer to another POI
+                if (closest == currentPOI+1) { // new closest POI is the right one
+                    console.log("Closer to " + closestName + " than " + closestName);
+                    document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
+                    currentPOI = closest;
+                } else { // new closest POI is the wrong one
+                    console.log("Wrong POI.")
+                    document.getElementById("buttonText").innerHTML = "This Stop: WRONG";
+                }
+				
 			}
 		}
 		
@@ -243,18 +255,11 @@ ENDOFSTRING;
                 $result = $db->query($query);
                 $row = $result->fetchRow(DB_FETCHMODE_ASSOC);
             ?>
-            <div class="row">
+            <div class="row" >
                 <figure class="col-sm-6">
-                    <p href="../information" class="quote">
+                    <p href="../information" class="quote" id="buttonText">
                         
-                        This Stop: <?php echo $row['name'] ?>
-                        
-                    </p>
-                </figure>
-                <figure class="col-sm-6">
-                    <p href="../information" class="quote">
-                        
-                        Next Stop: <?php $row = $result->fetchRow(DB_FETCHMODE_ASSOC); echo $row['name']  ?>
+                        This Stop: <?php //echo $row['name'] ?>
                         
                     </p>
                 </figure>
