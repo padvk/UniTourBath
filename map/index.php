@@ -57,6 +57,7 @@
 		};
 	  
 		var map;
+		var initialPOI = 0;
 		var currentPOI = 0;
 		var initialised = false;
 		
@@ -68,14 +69,14 @@
 			});
 			var infoWindow = new google.maps.InfoWindow;
 			var latiLong = [];
-            var pointInfo = [];
+			var pointInfo = [];
 				
 			//URL for XML file
 			//Takes information from XML file and adds markers to map
 			downloadUrl('createXML.php?t=' + time + '&dep=' + dep, function(data) {
 				var xml = data.responseXML;
 				var pointsOfInterest = xml.documentElement.getElementsByTagName('marker');
-                var order = 1;
+				var order = 1;
 				Array.prototype.forEach.call(pointsOfInterest, function(markerElem) {
 					var name = markerElem.getAttribute('name');
 					var address = order++ + " | " + markerElem.getAttribute('address');
@@ -109,7 +110,7 @@
 					infoWindow.open(map, marker);
 					
 					});
-                    pointInfo.push(name);
+					pointInfo.push(name);
 				});
 				getPosition(latiLong, pointInfo);
 			});
@@ -151,9 +152,6 @@
 					});
 					map.setCenter(pos);
 					
-					// currently findClosestPoint is called in the watchPosition function
-					// so it's called everytime your location updates
-					// might be what we want?
 					findClosestPoint(latiLong, pointInfo, pos.lat, pos.lng);
 					
 				}, function() {
@@ -188,32 +186,39 @@
 					lowestDistance = distance;
 				}
 			}
-            var closestName = pointInfo[closest];
+			var closestName = pointInfo[closest];
             
 			console.log("Your location just updated. Closest: " + closestName);
 			
 			if (!initialised) { // get the initial closest point of interest
-				currentPOI = closest;
-				initialised = true;
-                document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
-				console.log("Initial closest: " + closestName);
+				initialise(closest, closestName);
 			}
 			
-			if (closest != currentPOI+1 && lowestDistance < 0.00025) { // user now closer to another POI
-                if (closest == currentPOI+1) { // new closest POI is the right one
-                    console.log("Closer to " + closestName + " than " + closestName);
-                    document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
-                    currentPOI = closest;
-                } else { // new closest POI is the wrong one
-                    console.log("Wrong POI.")
-                    document.getElementById("buttonText").innerHTML = "This Stop: WRONG";
-                }
-				
+			if (closest != currentPOI && lowestDistance < 0.0003) { // user now closer to another POI
+				if (closest == (currentPOI+1)%latiLong.length) { // new closest POI is the right one
+					console.log("You just reached " + closestName);
+					document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
+					currentPOI = closest;
+					if (currentPOI == initialPOI) { // tour has looped, user is back at the beginning
+						// take user to final screen where they can see info for all POIs (?)
+					}
+				} else { // new closest POI is the wrong one
+					console.log("Wrong POI.")
+					document.getElementById("buttonText").innerHTML = "This Stop: WRONG";
+				}
 			}
+		}
+        
+		// initialise variables
+		function initialise(closest, closestName) {
+			currentPOI = initialPOI = closest;
+			initialised = true;
+			document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
+			console.log("Initial closest: " + closestName);
 		}
 		
 		// http://stackoverflow.com/questions/728360/how-do-i-correctly-clone-a-javascript-object
-		// clone an object
+		// clone an object (not actually used rn but might come in handy)
 		function clone(obj) {
 			if (null == obj || "object" != typeof obj) {
 				console.log("not object");
@@ -259,7 +264,7 @@ ENDOFSTRING;
                 <figure class="col-sm-6">
                     <p href="../information" class="quote" id="buttonText">
                         
-                        This Stop: <?php //echo $row['name'] ?>
+                        This Stop:
                         
                     </p>
                 </figure>
