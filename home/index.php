@@ -47,7 +47,7 @@
                     }
                 }
                 
-                $go = "../map/gogRoute.php?t=".($_POST["tourlength"])."&dep=".($_POST["department"]);
+                $go = "../map/?t=".($_POST["tourlength"])."&dep=".($_POST["department"]);
                 header("Location: $go");
             }
         
@@ -136,16 +136,8 @@ ENDOFSTRING;
                 
             </div>
         </div>
-    </section>
-    <a href="<?php echo "../map/gogRoute.php?t=";
-    echo $_POST["tourlength"];
-    echo "&dep=";
-    echo $_POST["department"];?>"><?php echo "../map/gogRoute.php?t=";
-    echo $_POST["tourlength"];
-    echo "&dep=";
-    echo $_POST["department"];?></a>
-    <?php    
-    
+    </section>  
+    <?php
     $result->free();
     $db->disconnect();
     ?>
