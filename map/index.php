@@ -113,7 +113,7 @@
 					pointInfo.push(name);
 					markers.push(marker);
 				});
-				getPosition(markers, pointInfo);
+				getPosition(markers, pointInfo, infoWindow);
 			});
 		}
 
@@ -135,7 +135,7 @@
 		}
 		  
 		//Function that gets and then tracks the position of the user
-		function getPosition(markers, pointInfo) {
+		function getPosition(markers, pointInfo, infoWindow) {
 			var pos;
 			if (navigator.geolocation) {
 				navigator.geolocation.watchPosition(function(position) {
@@ -200,13 +200,18 @@
 					// update markers
 					markers[currentPOI].setIcon('markers/previous.png');
 					markers[closest].setIcon('markers/current.png');
-					markers[(closest+1)%markers.length].setIcon('markers/next.png');
 					
 					console.log("You just reached " + closestName);
 					document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
 					currentPOI = closest;
 					if (currentPOI == initialPOI) { // tour has looped, user is back at the beginning
-						// take user to final screen where they can see info for all POIs (?)
+					
+						// END OF TOUR - take user to final screen where they can see info for all POIs (?)
+						document.getElementById("buttonText").innerHTML = "Tour finished.";
+						
+					} else { // tour's not over
+						// update next marker
+						markers[(closest+1)%markers.length].setIcon('markers/next.png');
 					}
 				} else { // new closest POI is the wrong one
 					console.log("Wrong POI.")
