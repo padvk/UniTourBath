@@ -68,7 +68,7 @@
 				zoom: 17
 			});
 			var infoWindow = new google.maps.InfoWindow;
-			var latiLong = [];
+			var markers = [];
 			var pointInfo = [];
 				
 			//URL for XML file
@@ -85,9 +85,6 @@
 						parseFloat(markerElem.getAttribute('lat')),
 						parseFloat(markerElem.getAttribute('lng'))
 					);
-						
-					//pushing the point (lat and long data) to latiLong - used for the route finding
-					latiLong.push(point);
 					
 					//Info window userd when user clicks on point of interest
 					var infowincontent = document.createElement('div');
@@ -110,9 +107,13 @@
 					infoWindow.open(map, marker);
 					
 					});
+					marker.setLabel('');
+					marker.setIcon('markers/togo.png');
+					
 					pointInfo.push(name);
+					markers.push(marker);
 				});
-				getPosition(latiLong, pointInfo);
+				getPosition(markers, pointInfo);
 			});
 		}
 
@@ -134,7 +135,7 @@
 		}
 		  
 		//Function that gets and then tracks the position of the user
-		function getPosition(latiLong, pointInfo) {
+		function getPosition(markers, pointInfo) {
 			var pos;
 			if (navigator.geolocation) {
 				navigator.geolocation.watchPosition(function(position) {
@@ -152,7 +153,7 @@
 					});
 					map.setCenter(pos);
 					
-					findClosestPoint(latiLong, pointInfo, pos.lat, pos.lng);
+					findClosestPoint(markers, pointInfo, pos.lat, pos.lng);
 					
 				}, function() {
 					handleLocationError(true, infoWindow, map.getCenter());
@@ -171,14 +172,14 @@
 								  'Error: Your browser does not support location.');
 		}
 		
-		function findClosestPoint(latiLong, pointInfo, lat, lng) { // called when position is updated
+		function findClosestPoint(markers, pointInfo, lat, lng) { // called when position is updated
 			var closest = 0;
 			var lowestDistance = 999;
 			
-			for (i = 0; i < latiLong.length; i++) { // for each POI
+			for (i = 0; i < markers.length; i++) { // for each POI
 				// get distance from current location to point i
-				var destLat = latiLong[i].lat();
-				var destLng = latiLong[i].lng();
+				var destLat = markers[i].getPosition().lat();
+				var destLng = markers[i].getPosition().lng();
 				var distance = Math.sqrt(Math.pow(lng - destLng, 2) + Math.pow(lat - destLat, 2));
 				
 				if (distance < lowestDistance) {
@@ -191,11 +192,16 @@
 			console.log("Your location just updated. Closest: " + closestName);
 			
 			if (!initialised) { // get the initial closest point of interest
-				initialise(closest, closestName);
+				initialise(markers, closest, closestName, (closest+1)%markers.length);
 			}
 			
 			if (closest != currentPOI && lowestDistance < 0.0003) { // user now closer to another POI
-				if (closest == (currentPOI+1)%latiLong.length) { // new closest POI is the right one
+				if (closest == (currentPOI+1)%markers.length) { // new closest POI is the right one
+					// update markers
+					markers[currentPOI].setIcon('markers/previous.png');
+					markers[closest].setIcon('markers/current.png');
+					markers[(closest+1)%markers.length].setIcon('markers/next.png');
+					
 					console.log("You just reached " + closestName);
 					document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
 					currentPOI = closest;
@@ -210,7 +216,10 @@
 		}
         
 		// initialise variables
-		function initialise(closest, closestName) {
+		function initialise(markers, closest, closestName, next) {
+			
+			markers[closest].setIcon('markers/current.png');
+			markers[next].setIcon('markers/next.png');
 			currentPOI = initialPOI = closest;
 			initialised = true;
 			document.getElementById("buttonText").innerHTML = "This Stop: " + closestName;
@@ -233,7 +242,7 @@
 		}
 		
 		function doNothing() {}
-	  
+	
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdds_EpEfCnpojHMvMUvntJj1gCx9moOA&callback=initMap">
