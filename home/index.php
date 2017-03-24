@@ -144,9 +144,12 @@ ENDOFSTRING;
     
     <footer class="container">
         <div class="row">
-            <p class="col-sm-4">
+            <p class="col-xs-6">
                 &copy; 2017 UniTour Bath
             </p>
+            <a href="../login/" class="col-xs-6">
+                admin access?
+            </a>
         </div>
     </footer>
 </body>
