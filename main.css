@@ -5,6 +5,10 @@ body {
 	font-weight: 300;
 }
 
+a {
+    text-align:right;
+}
+
 header {
 	padding: 20px 0;
 }
@@ -100,17 +104,13 @@ section .row img {
 	width: 100%;
 }
 
-.col-md-6 {
-	margin: 0 0 30px;
-}
-
 .quote {
 	position: relative;
 	cursor: pointer;
 	border: 1px solid #DBDEE2;
-	margin: 20px;
+	margin: 20px 0px 20px 0px;
 	text-align: center;
-	font-size: 25px;
+	font-size: 20px;
 	padding: 10px;
 }
 
