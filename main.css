@@ -19,7 +19,7 @@ header .row, footer .row {
 }
 
 header h1 {
-	font-weight: 700;
+	font-weight: 600;
 	color: #000;
 	margin: 0;
 	display: inline;
@@ -133,7 +133,11 @@ section .row img {
 	background-color: #598CD7;
 }
 
-/* Map */ 
+/* Map */
+#photo {
+	max-width:100%;
+	height:auto;
+}
 
 /* Height of map must be set explicitly */
 #map {

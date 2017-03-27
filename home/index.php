@@ -61,10 +61,10 @@
     
     <header class = "container">
         <div class = "row">
-            <h1 class = "col-sm-4">
-                Uni Tour Bath
+            <h1 class = "col-sm-10">
+                UniTour Bath
             </h1>
-            <div class = "col-sm-8 text-right">
+            <div class = "col-sm-2 text-right">
                 <img src="../unitourlogo.PNG" style="width:50px;height:55px;"/>
             </div>
         </div>   
