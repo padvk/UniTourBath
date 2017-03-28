@@ -217,9 +217,9 @@
                         // update info page
                         document.getElementById("infotitle").innerHTML = m.name;
                         document.getElementById("infopage").innerHTML = m.fullinfo;
-                        if (m.photo.length() > 0) {
+                        if (m.photo) {
                             console.log("There is a photo");
-                            var imgstring = "<br/><img id='photo'src='../information/" + m.photo + "' />";
+                            var imgstring = "<br/><img id='photo'src='../information/photos/" + m.photo + "' />";
                             document.getElementById("infopage").innerHTML = m.fullinfo + imgstring;
                         }
 
@@ -254,9 +254,9 @@
                 document.getElementById("buttonText").innerHTML = "This Stop: " + name;
                 document.getElementById("infotitle").innerHTML = name;
                 document.getElementById("infopage").innerHTML = m.fullinfo;
-                if (m.photo != null) {
+                if (m.photo) {
                     console.log("There is a photo");
-                    var imgstring = "<br/><img id='photo' src='../information/" + m.photo + "' />";
+                    var imgstring = "<br/><img id='photo' src='../information/photos/" + m.photo + "' />";
                     document.getElementById("infopage").innerHTML = m.fullinfo + imgstring;
                 }
             }

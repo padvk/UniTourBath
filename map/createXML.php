@@ -25,7 +25,7 @@
     $query = "";
     if ($dep == "None") {
         //$query = "SELECT * FROM utbpoi WHERE priority<=$priority ORDER BY orderID";
-		$query = "SELECT * FROM utbpoi WHERE priority=5 ORDER BY orderID"; // for testing
+		$query = "SELECT * FROM utbpoi WHERE priority=6 ORDER BY orderID"; // for testing
     } else {
         $query = "SELECT * FROM utbpoi WHERE priority<=$priority OR department='$dep' ORDER BY orderID";
     }
