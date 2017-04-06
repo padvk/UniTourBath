@@ -5,12 +5,25 @@ body {
 	font-weight: 300;
 }
 
-a {
-    text-align:right;
+#menu {
+    padding: 20px 0;
+}
+
+#btn-menu{
+    text-align:center;
+    text-decoration: none;
+	position: relative;
+	cursor: pointer;
+    display: inline;
+}
+
+#btn-menu:hover {
+	top:2px;
+	left:2px;
 }
 
 header {
-	padding: 20px 0;
+	margin: 20px 0px 20px 0px;
 }
 
 header .row, footer .row {
@@ -108,7 +121,6 @@ section .row img {
 	position: relative;
 	cursor: pointer;
 	border: 1px solid #DBDEE2;
-	margin: 20px 0px 20px 0px;
 	text-align: center;
 	font-size: 20px;
 	padding: 10px;
@@ -147,3 +159,4 @@ section .row img {
 html, body {
     height: 100%;
 }
+
