@@ -16,89 +16,73 @@
     <body>
         
         <?php
-            require_once "DB.php";
-            include "../globals.php";
-            $dsn="mysql://$user:$password@$host/$database";
-            $db = DB::connect($dsn);
-            if (DB::isError($db)) {
-                die ($db->getMessage());
-            }
-			
-            // define variables and set to empty values
-            $usernameErr = $passwordErr = "";
-            $username = $password = "";
+            session_start(); 
+            
+            $username = $password = $userError = $passError = '';
+            
             
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                if (empty($_POST["username"])) {
-                    $username = "";
+                $username = $_POST['username']; $password = $_POST['password'];
+                if($username === 'admin' && $password === 'password'){
+                    $_SESSION['login'] = true; 
+                    header('LOCATION:../admin'); 
+                    die();
                 }
-                
-                if (empty($_POST["password"])) {
-                    $password = "";
-                }
-               
+                if($username !== 'admin')$userError = 'Invalid Username';
+                if($password !== 'password')$passError = 'Invalid Password';
             }
+            
+        ?>						
         
-        function test_input($data) {
-            $data = trim($data);
-            $data = stripslashes($data);
-            $data = htmlspecialchars($data);
-            return $data;
-        }
-    ?>						
-    
-    <header class = "container">
-        <div class = "row">
-            <h1 class = "col-sm-4">
-                Uni Tour Bath
-            </h1>
-            <div class = "col-sm-8 text-right">
-                <img src="../unitourlogo.PNG" style="width:50px;height:55px;"/>
-            </div>
-        </div>   
-    </header>
-    
-    <section class="jumbotron">
-    </section>
-    
-    <section class ="container">
-        <div class="container">
-            <div class="row text-center">
-                <h3>
-                    Welcome to UniTour Bath admin login. Please enter your username and password, and press <b>Login</b>
-                </h3>
-                <form class="form-horizontal" method="post" >
-                    <div class="form-group">
-                        <label class="col-xs-6 control-label" for="username">Username</label>
-                        <div class="col-xs-6">
-                            <input type="text" name="username" class="form-control" placeholder="Enter Username" value="">
+        <header class = "container">
+            <div class = "row">
+                <h1 class = "col-sm-4">
+                    Uni Tour Bath
+                </h1>
+                <div class = "col-sm-8 text-right">
+                    <img src="../unitourlogo.PNG" style="width:50px;height:55px;"/>
+                </div>
+            </div>   
+        </header>
+        
+        <section class="jumbotron">
+        </section>
+        
+        <section class ="container">
+            <div class="container">
+                <div class="row text-center">
+                    <h3>
+                        Welcome to UniTour Bath admin login. Please enter your username and password, and press <b>Login</b>
+                    </h3>
+                    <form class="form-horizontal" method="post" >
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label" for="username">Username</label>
+                            <div class="col-xs-6">
+                                <input type="text" name="username" class="form-control" placeholder="Enter Username" value="">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-6 control-label" for="password">Password</label>
-                        <div class="col-xs-6">
-                            <input type="password" name="password" class="form-control" placeholder="Enter Password" value=""> 
-                        </div>
-                    </div>                    
-                    <div class="row text-center">
-                        <input class="btn btn-primary" id="continueButton" type="submit" value="Login" />
-                        <br>
-                    </div> 
-                </form>
-                
+                        <div class="form-group">
+                            <label class="col-xs-6 control-label" for="password">Password</label>
+                            <div class="col-xs-6">
+                                <input type="password" name="password" class="form-control" placeholder="Enter Password" value=""> 
+                            </div>
+                        </div>                    
+                        <div class="row text-center">
+                            <input class="btn btn-primary" id="continueButton" type="submit" value="Login" />
+                            <br>
+                        </div> 
+                    </form>
+                    
+                </div>
             </div>
-        </div>
-    </section>  
-    <?php
-    $db->disconnect();
-    ?>
-    
-    <footer class="container">
-        <div class="row">
-            <p class="col-sm-4">
-                &copy; 2017 UniTour Bath
-            </p>
-        </div>
-    </footer>
-</body>
+        </section>  
+        
+        <footer class="container">
+            <div class="row">
+                <p class="col-sm-4">
+                    &copy; 2017 UniTour Bath
+                </p>
+            </div>
+        </footer>
+    </body>
 </html>
